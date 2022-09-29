@@ -15,9 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
 * This is the statistics program.
@@ -39,30 +36,41 @@ final class Statistics {
     /**
     * The mean() function.
     *
-    * @param arrayOfIntegers the collection of integers
+    * @param intArray the collection of integers
     * @return the mean of the integers
     */
-    public static double mean(final Integer[] arrayOfIntegers) {
-        final int numberOfNumbers = arrayOfNumber.length;
-        int meanTotal = 0;
-        for (int tempNumber : arrayOfNumbers) {
-            meanTotal = meanTotal + tempNumber
+    public static double mean(final Integer[] intArray) {
+
+        double sum = 0;
+
+        for (int number : intArray) {
+            sum += number;
         }
-        final double mean = (double) meanTotal / (double) numberOfNumbers;
-        return mean;
+
+        return sum / intArray.length;
     }
 
     /**
     * The median() function.
     *
-    * @param arrayOfIntegers the collection of integers
+    * @param intArray the collection of integers
     * @return the median of the integers
     */
-    public static double median(final Integer[] arrayOfIntegers) {
+    public static double median(final Integer[] intArray) {
 
+        final double median;
+        final int arrayLength = intArray.length;
+
+        Arrays.sort(intArray);
+
+        if (intArray.length % 2 == 0) {
+            median = ((double) intArray[arrayLength / 2]
+                    + (double) intArray[arrayLength / 2 - 1]) / 2;
+        } else {
+            median = (double) intArray[arrayLength / 2];
+        }
         return median;
     }
-
 
     /**
     * The starting main() function.
@@ -70,10 +78,15 @@ final class Statistics {
     * @param args No args will be used
     */
     public static void main(final String[] args) {
+
         Integer tempNumber;
         final ArrayList<Integer> listOfNumbers = new ArrayList<Integer>();
-        final Path filePath = Paths.get("../", args[0]);
+        final Path filePath = Paths.get("./", args[0]);
         final Charset charset = Charset.forName("UTF-8");
+
+        final double mean;
+        final double median;
+        final Integer[] arrayOfNumbers;
 
         try (BufferedReader reader = Files.newBufferedReader(
                                      filePath, charset)) {
@@ -86,15 +99,16 @@ final class Statistics {
             System.err.println(errorCode);
         }
 
-        final Integer[] arrayOfNumbers = listOfNumbers.toArray(new Integer[0]);
+        arrayOfNumbers = listOfNumbers.toArray(new Integer[0]);
         System.out.println(Arrays.toString(arrayOfNumbers));
 
         System.out.println("\nCalculating stats...");
-        final double mean = mean(arrayOfNumbers);
-        final double median = median(arrayOfNumbers);
+        mean = mean(arrayOfNumbers);
+        median = median(arrayOfNumbers);
 
         System.out.println("The mean is: " + mean);
         System.out.println("The median is: " + median);
+
         System.out.println("\nDone.");
     }
 }
